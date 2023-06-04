@@ -2,7 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import connnectDB from "./mongodb/connect.js";
-
+import router from "./Controllers/login.js";
 dotenv.config();
 const port = process.env.PORT;
 
@@ -17,6 +17,7 @@ app.use(express.json({ limit: "50mb" }));
 app.get("/", (req, res) => {
   res.send({ message: "Hello from backend!" });
 });
+app.use("/user", router);
 
 // Starting the server
 const startServer = async () => {
