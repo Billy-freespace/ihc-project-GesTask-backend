@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import connnectDB from "./mongodb/connect.js";
 import morgan from "morgan";
+import router from "./Controllers/login.js";
 
 dotenv.config();
 const port = process.env.PORT;
@@ -19,6 +20,7 @@ app.use(morgan("tiny"));
 app.get("/", (req, res) => {
   res.send({ message: "Hello from backend!" });
 });
+app.use("/user", router);
 
 // Starting the server
 const startServer = async () => {
