@@ -1,18 +1,18 @@
 import dotenv from "dotenv"; // import dotenv
-import { Router } from "express"; // import router from express
 import User from "../Models/user.js"; // import user model
 import bcrypt from "bcryptjs"; // import bcrypt to hash passwords
 import jwt from "jsonwebtoken"; // import jwt to sign tokens
 
 dotenv.config(); // load .env variables
 
-const router = Router(); // create router to create route bundle
+const usertCtrl ={}; // create user controlelr object
+const loginCtrl ={}; // create login controller object
 
 // Destructure ENV variables with defaults
 const { SECRET = "secret" } = process.env;
 
 // Signup route to create a new user
-router.post("/signup", async (req, res) => {
+usertCtrl.createUser = async (req, res) => {
     try {
         // hash the password
         req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -23,10 +23,10 @@ router.post("/signup", async (req, res) => {
     } catch (error) {
         res.status(400).json({ error });
     }
-});
+};
 
 // Login route to verify a user and get a token
-router.post("/login", async (req, res) => {
+loginCtrl.loginUser= async (req, res) => {
     try {
         // check if the user exists
         const user = await User.findOne({ username: req.body.username });
@@ -46,6 +46,6 @@ router.post("/login", async (req, res) => {
     } catch (error) {
         res.status(400).json({ error });
     }
-});
+};
 
-export default router; // export router as default
+export default usertCtrl; // export router as default

@@ -1,23 +1,25 @@
-import express from "express";
-import * as dotenv from "dotenv";
-import cors from "cors";
-import connnectDB from "./mongodb/connect.js";
-import router from "./Controllers/login.js";
-dotenv.config();
-const port = process.env.PORT;
+  import express from "express";
+  import * as dotenv from "dotenv";
+  import cors from "cors";
+  import connnectDB from "./mongodb/connect.js";
+  import router from "./Routes/userroute.js";
+  import taskRoute from "./Controllers/createTask.js";
+  dotenv.config();
+  const port = process.env.PORT;
 
-// Settings
-const app = express();
-app.use(cors());
-app.use(express.json({ limit: "50mb" }));
+  // Settings
+  const app = express();
+  app.use(cors());
+  app.use(express.json({ limit: "50mb" }));
 
-// Middelwares
+  // Middelwares
 
-// Routes
-app.get("/", (req, res) => {
-  res.send({ message: "Hello from backend!" });
-});
-app.use("/user", router);
+  // Routes
+  app.get("/", (req, res) => {
+    res.send({ message: "Hello from backend!" });
+  });
+  app.use("/user", router);
+  app.post("/createTask", taskRoute);
 
 // Starting the server
 const startServer = async () => {
