@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken"; // import jwt to sign tokens
 
 dotenv.config(); // load .env variables
 
-const usertCtrl ={}; // create user controlelr object
-const loginCtrl ={}; // create login controller object
+const usertCtrl = {}; // create user controlelr object
+const loginCtrl = {}; // create login controller object
 
 // Destructure ENV variables with defaults
 const { SECRET = "secret" } = process.env;
@@ -14,7 +14,9 @@ const { SECRET = "secret" } = process.env;
 // Signup route to create a new user
 usertCtrl.createUser = async (req, res) => {
     try {
-        // hash the password
+        if (req.body.password !== req.body.passwordConfirm) {
+            return res.status(400).json({ error: "Las contraseñas no coinciden" });
+        }
         req.body.password = await bcrypt.hash(req.body.password, 10);
         // create a new user
         const user = await User.create(req.body);
@@ -25,8 +27,9 @@ usertCtrl.createUser = async (req, res) => {
     }
 };
 
+
 // Login route to verify a user and get a token
-loginCtrl.loginUser= async (req, res) => {
+loginCtrl.loginUser = async (req, res) => {
     try {
         // check if the user exists
         const user = await User.findOne({ username: req.body.username });
