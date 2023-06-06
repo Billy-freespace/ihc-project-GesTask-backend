@@ -35,7 +35,7 @@ loginCtrl.loginUser= async (req, res) => {
             const result = await bcrypt.compare(req.body.password, user.password);
             if (result) {
                 // sign token and send it in response
-                const token = await jwt.sign({ username: user.username }, SECRET);
+                const token = await jwt.sign({ _id: user._id, username: user.username }, SECRET);
                 res.json({ token });
             } else {
                 res.status(400).json({ error: "password doesn't match" });
@@ -48,4 +48,4 @@ loginCtrl.loginUser= async (req, res) => {
     }
 };
 
-export default usertCtrl; // export router as default
+export { loginCtrl, usertCtrl };

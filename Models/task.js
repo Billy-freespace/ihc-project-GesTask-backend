@@ -1,4 +1,6 @@
 import { Schema, model } from "mongoose"
+import mongoose from 'mongoose'
+import User from "./user.js";
 
 // Task Schema
 const TaskSchema = new Schema({
@@ -8,7 +10,11 @@ const TaskSchema = new Schema({
     categories: [{ type: String, required: true }],
     priority: { type: String, required: true },
     deadline: { type: Date, required: true },
-    status: { type: String, enum: ["Todo", "in Progress", "Completed"], default: "Todo" }
+    status: { type: String, enum: ["Todo", "in Progress", "Completed"], default: "Todo" },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
 });
 
 // Task model

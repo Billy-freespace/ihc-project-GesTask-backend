@@ -31,6 +31,4 @@ const isLoggedIn = async (req, res, next) => {
 };
 
 // Exportar el middleware personalizado
-export default {
-    isLoggedIn,
-};
+export default isLoggedIn;

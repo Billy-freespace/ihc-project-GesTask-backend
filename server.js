@@ -3,6 +3,7 @@
   import cors from "cors";
   import connnectDB from "./mongodb/connect.js";
   import router from "./Routes/userroute.js";
+  import loginroute from "./Routes/loginroute.js";
   import taskRoute from "./Controllers/createTask.js";
   dotenv.config();
   const port = process.env.PORT;
@@ -19,7 +20,8 @@
     res.send({ message: "Hello from backend!" });
   });
   app.use("/user", router);
-  app.post("/createTask", taskRoute);
+  app.use("/user", loginroute);
+  app.use("/createTask", taskRoute);
 
 // Starting the server
 const startServer = async () => {
