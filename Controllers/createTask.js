@@ -16,14 +16,19 @@ taskRoute.post("/createTask", isLoggedIn, async (req, res) => {
         const userId = req.user._id;
         // console.log(req.user);
         // console.log(userId);
-
-
+        const categoryIds = categories.map(category => category._id);
+        // Verificar si los IDs de categoría son válidos
+        const validCategoryIds = await Category.find({ _id: { $in: categoryIds }, user: userId }).distinct('_id');
+        // Verificar si se encontraron todos los IDs válidos
+        if (validCategoryIds.length !== categoryIds.length) {
+            throw new Error("IDs de categoría inválidos");
+        }
         // Crear una nueva instancia de Task con los datos recibidos
         const newTask = new Task({
             name,
             description,
             comments,
-            categories,
+            categories: validCategoryIds,
             priority,
             deadline,
             status,
@@ -35,6 +40,9 @@ taskRoute.post("/createTask", isLoggedIn, async (req, res) => {
 
         res.status(201).json(createdTask);
     } catch (error) {
+        if (error.name === "CastError") {
+            return res.status(400).json({ error: "IDs de categoría inválidos" });
+        }
         res.status(400).json({ error: error.message });
     }
 });
