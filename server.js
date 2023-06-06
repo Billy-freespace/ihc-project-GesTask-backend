@@ -5,6 +5,9 @@
   import router from "./Routes/userroute.js";
   import loginroute from "./Routes/loginroute.js";
   import taskRoute from "./Controllers/createTask.js";
+  import categoryroute from "./Routes/categoryroute.js";
+  import priorityroute from "./Routes/priorityroute.js";
+
   dotenv.config();
   const port = process.env.PORT;
 
@@ -22,7 +25,8 @@
   app.use("/user", router);
   app.use("/user", loginroute);
   app.use("/createTask", taskRoute);
-
+  app.use("/", categoryroute);
+  app.use("/", priorityroute);
 // Starting the server
 const startServer = async () => {
   try {

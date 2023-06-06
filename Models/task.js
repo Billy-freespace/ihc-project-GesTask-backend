@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose"
 import mongoose from 'mongoose'
-import User from "./user.js";
+import User from "./user.js"
 
 // Task Schema
 const TaskSchema = new Schema({
