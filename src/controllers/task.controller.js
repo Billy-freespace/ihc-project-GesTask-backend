@@ -1,5 +1,6 @@
 const createTask = async (req, res) => {
   try {
+    const { taskModel } = req.context.models;
     const {
       name,
       description,
@@ -10,6 +11,7 @@ const createTask = async (req, res) => {
       status,
     } = req.body;
     const userId = req.user._id;
+    console.log("task properties obteined");
     // const categoryIds = categories.map((category) => category._id);
     // // Verificar si los IDs de categoría son válidos
     // const validCategoryIds = await Category.find({
@@ -21,19 +23,21 @@ const createTask = async (req, res) => {
     //   throw new Error("IDs de categoría inválidos");
     // }
     // Crear una nueva instancia de Task con los datos recibidos
-    const newTask = new Task({
+    const newTask = new taskModel({
       name,
       description,
       comments,
-      categories: validCategoryIds,
+      categories,
       priority,
       deadline,
       status,
       user: userId,
     });
+    console.log("Task model created");
 
     // Guardar la nueva tarea en la base de datos
     const createdTask = await newTask.save();
+    console.log("Task saved");
 
     res.status(201).json(createdTask);
   } catch (error) {
@@ -46,10 +50,11 @@ const createTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
+    const { taskModel } = req.context.models;
     const userId = req.user._id; // Obtén el _id del usuario desde req.user
 
     // Obtén todas las tareas asociadas al usuario
-    const tasks = await Task.find({ user: userId });
+    const tasks = await taskModel.find({ user: userId });
 
     res.json(tasks);
   } catch (error) {
@@ -61,7 +66,11 @@ const getTasks = async (req, res) => {
 // Actualizar una tarea del usuario
 const updateTask = async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, user: req.user._id });
+    const { taskModel } = req.context.models;
+    const task = await taskModel.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
@@ -105,13 +114,17 @@ const updateTask = async (req, res) => {
 // Eliminar una tarea del usuario
 const deleteTask = async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, user: req.user._id });
+    const { taskModel } = req.context.models;
+    const task = await taskModel.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
 
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    await Task.deleteOne({ _id: req.params.id, user: req.user._id });
+    await taskModel.deleteOne({ _id: req.params.id, user: req.user._id });
 
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
