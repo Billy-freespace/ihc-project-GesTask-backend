@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 });
 app.use(api, signUpRouter);
 app.use(api, logInRouter);
-app.use(api + "/task", taskRouter);
+app.use(api + "/tasks", taskRouter);
 app.use(api + "/categories", categoryRouter);
 app.use(api + "/priorities", priorityRouter);
 
