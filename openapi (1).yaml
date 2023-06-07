@@ -1,0 +1,425 @@
+openapi: 3.0.1
+info:
+  title: API GesTask.
+  description: Esta API se ancarga de manejar la informacion de GesTask.
+  version: 1.0.0
+servers:
+- url: localhosto:3001/
+tags:
+- name: usuario
+  description: maneja la informacion del usuario
+- name: task
+  description: maneja la informacion de las tareas
+
+paths:
+
+  /user/signup:
+    post:
+      tags:
+      - usuario
+      summary: registrar un nuevo usuario
+      description: This can only be done by the logged in user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+      responses:
+        200:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+                  _id:
+                    type: string
+        400:
+          description: Error creating user
+          
+  /user/login:
+    post:
+      tags:
+      - usuario
+      summary: logear un usuario
+      description: This can only be done by the logged in user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+      responses:
+        200:
+          description: User login successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  
+        400:
+          description: Invalid username or password
+          
+  /createTask/createTask:
+    post:
+      tags:
+      - task
+      summary: crea una tarea nueva
+      parameters:
+      - $ref: '#/components/parameters/token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+        required: true
+      responses:
+        200:
+          description: (OK) La informacion de la tarea se guardo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoTaskPost'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /createTask/tasks:
+    get:
+      tags:
+        - task
+      summary: Obtener todas las tareas del usuario
+      parameters:
+      - $ref: '#/components/parameters/token'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoTaskPost'
+        401:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/ServerError'
+      
+  /createTask/tasks/{tareaId}:
+    patch:
+      tags:
+        - task
+      summary: Actualiza una tarea existente
+      parameters:
+        - in: path
+          name: tareaId
+          description: ID de la tarea
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: (OK) La tarea se actualizó correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoTaskPut'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /createTask/tasks/{taskId}:
+    delete:
+      tags:
+        - task
+      summary: Elimina una tarea existente
+      parameters:
+        - in: path
+          name: taskId
+          description: ID de la tarea a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: La tarea se eliminó correctamente
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /categories:
+    post:
+      tags:
+      - task
+      summary: crea una categoria propia del usuario
+      parameters:
+      - $ref: '#/components/parameters/token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoriesRequest'
+        required: true
+      responses:
+        200:
+          description: (OK) se guardo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/exitCategoriesget'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+    get:
+      tags:
+        - task
+      summary: Obtener todas las categorias del usuario
+      parameters:
+      - $ref: '#/components/parameters/token'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/exitCategoriesget'
+        401:
+          $ref: '#/components/responses/BadRequest'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /task/priority/{priority}:
+    get:
+      tags:
+        - task
+      summary: Elimina una tarea existente
+      parameters:
+        - in: path
+          name: priority
+          description: nombre de las tareas con prioridad que se quiere mostrar
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/token'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoTaskPost'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+components:
+  responses:
+    Unauthorized:
+      description: (Unauthorized) No hay autorizacion para llamar al servicio
+    
+    NotFound:
+      description: (NotFound) No se encontro informacion 
+    
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+      
+    ServerError:
+      description: Error en servidor
+      
+  parameters:
+    token:
+      in: header
+      name: token
+      description: Token de autenticaciondel usuario en API.
+      required: true
+      schema:
+        type: string
+  
+  schemas:
+    createUser:
+      type: object
+      properties:
+        username:
+          type: string
+          description: nombre de usuario
+        password:
+          type: string
+          description: contraseña de usuario
+        passwordConfirm:
+          type: string
+          description: validar contraseña
+      required:
+        - username
+        - password
+        - passwordConfirm
+        
+    loginUser:
+      type: object
+      properties:
+        username:
+          type: string
+          description: nombre de usuario
+        password:
+          type: string
+          description: contraseña de usuario
+      required:
+        - username
+        - password
+          
+    TaskRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la tarea
+        description:
+          type: string
+          description: Descripción de la tarea
+        comments:
+          type: array
+          description: Comentarios de la tarea
+          items:
+            type: string
+        category:
+          type: array
+          description: Categoría de la tarea
+          items:
+            type: string
+        priority:
+          type: string
+          description: Nivel de prioridad de la tarea
+        deadline:
+          type: string
+          format: date
+          description: Fecha límite de la tarea
+      required:
+        - name
+        - priority
+        - deadline
+        
+    ExitoTaskPost:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la tarea
+        description:
+          type: string
+          description: Descripción de la tarea
+        comments:
+          type: array
+          description: Comentarios de la tarea
+          items:
+            type: string
+        category:
+          type: array
+          description: Categoría de la tarea
+          items:
+            type: string
+        priority:
+          type: string
+          description: Nivel de prioridad de la tarea
+        deadline:
+          type: string
+          format: date
+          description: Fecha límite de la tarea
+        _id: 
+          type: string
+          description: Id correspondiente a la tarea
+        userid:
+          type: string
+          description: ID del usuario que creo la tarea
+          
+    TaskUpdateRequest:
+      type: object
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la tarea
+        descripcion:
+          type: string
+          description: Descripción de la tarea
+        comentarios:
+          type: string
+          description: Comentarios de la tarea
+        categoria:
+          type: string
+          description: Categoría de la tarea
+        prioridad:
+          type: string
+          description: Nivel de prioridad de la tarea
+        fechaLimite:
+          type: string
+          format: date
+          description: Fecha límite de la tarea
+        estatus:
+          type: string
+          enum:
+            - en progreso
+            - completado
+            - pendiente
+          description: Estado de la tarea (en progreso, completado o pendiente)
+      required:
+        - nombre
+        - categoria
+        - prioridad
+        - fechaLimite
+        - estatus
+
+    ExitoTaskPut:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          description: Mensaje de éxito
+      required:
+        - mensaje
+        
+    categoriesRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la tarea
+      required:
+        - name
+        
+    exitCategoriesget:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: id de la categoria creada
+        name:
+          type: string
+          description: nombre de la categoria creada
+        userId:
+          type: string
+          description: id del usuario que creo la tarea
+    
