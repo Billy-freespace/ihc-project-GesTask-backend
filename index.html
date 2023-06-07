@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="swagger-ui.css">
+  <title>Documentación Swagger</title>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+
+  <!-- Aquí agregaremos el JavaScript necesario para Swagger UI -->
+ <script src="swagger-ui-bundle.js"></script>
+  <script src="swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      // Configuración de Swagger UI
+      const ui = SwaggerUIBundle({
+        url: "https://billy-freespace.github.io/ihc-project-GesTask-backend/openapi.yaml", 
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        deepLinking: true
+      });
+
+      window.ui = ui;
+    };
+  </script>
+</body>
+</html>
