@@ -30,7 +30,7 @@ app.use(api, signUpRouter);
 app.use(api, logInRouter);
 app.use(api + "/task", taskRouter);
 app.use(api + "/categories", categoryRouter);
-app.use(api + "priorities", priorityRouter);
+app.use(api + "/priorities", priorityRouter);
 
 // Starting the server
 const startServer = async () => {
@@ -44,4 +44,6 @@ const startServer = async () => {
   }
 };
 
-await startServer();
+(async () => {
+  await startServer();
+})();

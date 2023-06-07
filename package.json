@@ -2,15 +2,20 @@
   "name": "ihc-project-gestask-backend",
   "version": "1.0.0",
   "description": "Proyecto de interacción humano computador",
-  "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "dev": "nodemon src/server.js --exec babel-node",
+    "build": "babel src --out-dir dist",
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.22.1",
+    "@babel/node": "^7.22.1",
+    "@babel/plugin-transform-runtime": "^7.22.4",
+    "@babel/preset-env": "^7.22.4",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.37.0",
     "cors": "^2.8.5",
