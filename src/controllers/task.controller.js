@@ -10,16 +10,16 @@ const createTask = async (req, res) => {
       status,
     } = req.body;
     const userId = req.user._id;
-    const categoryIds = categories.map((category) => category._id);
-    // Verificar si los IDs de categoría son válidos
-    const validCategoryIds = await Category.find({
-      _id: { $in: categoryIds },
-      user: userId,
-    }).distinct("_id");
-    // Verificar si se encontraron todos los IDs válidos
-    if (validCategoryIds.length !== categoryIds.length) {
-      throw new Error("IDs de categoría inválidos");
-    }
+    // const categoryIds = categories.map((category) => category._id);
+    // // Verificar si los IDs de categoría son válidos
+    // const validCategoryIds = await Category.find({
+    //   _id: { $in: categoryIds },
+    //   user: userId,
+    // }).distinct("_id");
+    // // Verificar si se encontraron todos los IDs válidos
+    // if (validCategoryIds.length !== categoryIds.length) {
+    //   throw new Error("IDs de categoría inválidos");
+    // }
     // Crear una nueva instancia de Task con los datos recibidos
     const newTask = new Task({
       name,
