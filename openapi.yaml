@@ -4,7 +4,12 @@ info:
   description: Esta API se ancarga de manejar la informacion de GesTask.
   version: 1.0.0
 servers:
-  - url: http://185.166.214.111:30001/
+  - url: '{protocol}://185.166.214.111:30001/'
+    variables:
+      protocol:
+        enum:
+          - http
+        default: http
 tags:
   - name: usuario
     description: maneja la informacion del usuario
